@@ -11,7 +11,7 @@ sys.path.insert(
 
 from datetime import datetime, timedelta
 
-from flask import Flask, jsonify, redirect, render_template_string, request, url_for
+from flask import Flask, jsonify, redirect, render_template_string, request, url_for, send_file
 
 from src.invitaciones.aplicacion.gestionar_invitacion import GestionarInvitacion
 from src.invitaciones.dominio.invitaciones import EstadoInvitacion
@@ -26,6 +26,15 @@ app = Flask(__name__)
 repositorio = RepositorioInvitacionesMemoria()
 gestionar_invitacion = GestionarInvitacion(repositorio)
 
+@app.get("/openapi.yaml")
+def obtener_contrato_openapi():
+    ruta_contrato = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "docs",
+        "api",
+        "openapi.yaml",
+    )
+    return send_file(ruta_contrato, mimetype="application/yaml")
 
 @app.route("/")
 def inicio():
@@ -166,8 +175,8 @@ def api_consultar_invitacion(token):
 def api_responder_invitacion(token):
     """Registra la respuesta del invitado y devuelve la invitación en JSON."""
     datos = request.get_json(silent=True)
-
-    if not datos or "estado" not in datos:
+    
+    if not isinstance(datos, dict) or "estado" not in datos:
         return jsonify(
             {"error": "Debe proporcionar el campo 'estado'."}
         ), 400
