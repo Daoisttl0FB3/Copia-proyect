@@ -202,16 +202,13 @@ def api_responder_invitacion(token):
     except ValueError as error:
         return jsonify({"error": str(error)}), 404
 
-    return jsonify(
-        {
-            "token": invitacion.token,
-            "destinatario": invitacion.destinatario,
-            "fecha_limite_respuesta": (
-                invitacion.fecha_limite_respuesta.isoformat()
-            ),
-            "estado": invitacion.estado.value,
-        }
-    ), 200
+    return jsonify({
+        "token": invitacion.token,
+        "destinatario": invitacion.destinatario,
+        "fecha_limite_respuesta":
+               invitacion.fecha_limite_respuesta.isoformat(),
+        "estado": invitacion.estado.value,
+    }), 200
 
 
 if __name__ == "__main__":
