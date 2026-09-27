@@ -26,3 +26,6 @@ jobs:
 
       - name: Ejecutar pruebas
         run: pytest -q
+
+      - name: Validar contrato OpenAPI
+        run: pytest -q tests/test_contrato_openapi.py
